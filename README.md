@@ -1,27 +1,51 @@
 # demog_raw_data.sas
 SAS code for transforming raw demographic data into CDISC SDTM DM dataset
 
+# SDTM DM Dataset Creation from Raw Demographics
 
-data Demog;
-   input STUDYID $ 
-         SITEID $ 
-         SUBJID $ 
-         DOB : yymmdd10. 
-         SEX $ 
-         RACE : $50.  
-         ARM : $20. 
-         RFSTDTC : yymmdd10. 
-         RFENDTC : yymmdd10.;
-   format DOB RFSTDTC RFENDTC yymmdd10.;
-datalines;
-STUDY01 001 101 1985-05-12 M "White"                       "Treatment" 2024-01-01 2024-06-30
-STUDY01 001 102 1990-08-25 F "Black_or_African_American"   "Control"   2024-01-05 2024-06-30
-STUDY01 002 201 1978-03-15 M "Asian"                       "Treatment" 2024-01-10 2024-06-30
-STUDY01 002 202 1988-11-20 F "Hispanic_or_Latino"          "Control"   2024-01-12 2024-06-30
-;
-run;
+## Project Overview
+This project demonstrates how to create a **CDISC SDTM-compliant DM (Demographics) dataset** from raw clinical trial data using **SAS**.
 
-proc print data=Demog;
-run;
+---
+
+## Input
+
+A small sample demographic dataset created using inline `datalines` in SAS:
+- `STUDYID`, `SITEID`, `SUBJID`
+- Date of birth (`DOB`)
+- Gender (`SEX`)
+- Race (`RACE`)
+- Treatment arm (`ARM`)
+- Reference start and end dates (`RFSTDTC`, `RFENDTC`)
+
+---
+
+## Transformation Highlights
+
+The raw data is transformed into the SDTM-compliant **DM domain** with:
+- `DOMAIN` and `USUBJID` generation
+- Calculation of `AGE` and `AGEU`
+- Date formatting (`BRTHDTC`, `RFSTDTC`, `RFENDTC`)
+- Labeling of all key variables
+- Underscore in `RACE` converted to spaces using `tranwrd()`
+
+---
+
+## Output Dataset: `DM`
+| Variable | Label |
+|----------|-------|
+| STUDYID  | Study Identifier |
+| DOMAIN   | Domain Abbreviation |
+| USUBJID  | Unique Subject Identifier |
+| SUBJID   | Subject ID |
+| SITEID   | Site Identifier |
+| BRTHDTC  | Birth Date |
+| SEX      | Sex |
+| RACE     | Race |
+| AGE      | Age |
+| AGEU     | Age Units |
+| RFSTDTC  | Reference Start Date |
+| RFENDTC  | Reference End Date |
+| ARM      | Planned Arm |
 
 
